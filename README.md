@@ -28,7 +28,7 @@ From there, edit `fix_py311.xsh` to include this list in `target`, update the
 `base_path` and set `YOUR_GH_USER`.  Once that is done:
 
 ```bash
-xnosh fix_py311.xsh
+xonsh fix_py311.xsh
 ```
 
 Given that this script has significant external side-effects (opens PRs!), I
