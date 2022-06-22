@@ -11,9 +11,17 @@ def fix_one(fname, gh_account):
     cd @(work_dir)
     git remote update --prune
     hub fork
+    remotes = set(__ for __ in [_.strip() for _ in $(git remote).split('\n')] if len(__))
 
-    if gh_account in $(git remote get-url origin):
-        push_target = 'origin'
+    if 'origin' in remotes:
+        cannon = 'origin'
+    elif 'upstream' in remotes:
+        cannon = 'upstream'
+    else:
+        raise Exception("no canonical remote?")
+
+    if gh_account in $(git remote get-url @(cannon)):
+        push_target = cannon
     else:
         push_target = gh_account
 
@@ -27,12 +35,12 @@ def fix_one(fname, gh_account):
         git switch master
     else:
         raise Exception("can not guess default branch")
-    if $(git ls-remote --heads origin master) != '':
+    if $(git ls-remote --heads @(cannon) master) != '':
         with ${...}.swap(RAISE_SUBPROC_ERROR=True):
-            git branch -u origin/master
-    elif $(git ls-remote --heads origin main) != '':
+            git branch -u @(cannon)/master
+    elif $(git ls-remote --heads @(cannon) main) != '':
         with ${...}.swap(RAISE_SUBPROC_ERROR=True):
-            git branch -u origin/main
+            git branch -u @(cannon)/main
     git pull
 
     if not !(test -f versioneer.py):
