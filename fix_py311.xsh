@@ -17,8 +17,8 @@ def fix_one(fname, gh_account):
     else:
         push_target = gh_account
 
-    if $(git ls-remote --heads @(gh_account) fix_py311) != '':
-        git checkout fix_py311
+    if $(git ls-remote --heads @(gh_account) fix_py312) != '':
+        git checkout fix_py312
         print('already done')
         return
     if $(git branch --list main) != '':
@@ -39,7 +39,7 @@ def fix_one(fname, gh_account):
         print('no file!')
         return
 
-    if not !(git switch -c fix_py311):
+    if not !(git switch -c fix_py312):
         print(f"FAILED {work_dir}")
         return
 
@@ -56,18 +56,20 @@ def fix_one(fname, gh_account):
         git commit -m """MNT: change from using SafeConfigParser to ConfigParser
 
 SafeConfigParser has been deprecated since Python 3.2 and will
-be removed in py311.
+be removed in py312.
 
 https://github.com/python/cpython/pull/28292
 https://bugs.python.org/issue45173
+https://github.com/python/cpython/issues/89336
 """
-        git push @(push_target) fix_py311
-    hub pull-request -m """Fix versioneer compat with py311
+        git push @(push_target) fix_py312
+    hub pull-request -m """Fix versioneer compat with py312
 
-SafeConfigParser has been deprecated since Python 3.2 and will be removed in py311.
+SafeConfigParser has been deprecated since Python 3.2 and will be removed in py312.
 
 https://github.com/python/cpython/pull/28292
 https://bugs.python.org/issue45173
+https://github.com/python/cpython/issues/89336
 """
 
 base_path = '/path/to/your/source'
